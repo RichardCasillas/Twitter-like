@@ -14,14 +14,17 @@ package application;
 
 import Visitor.Observer;
 import Visitor.Subject;
+import Visitor.Statistics;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import Visitor.Statistics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,13 @@ public class User extends Subject implements Tree, Observer{
 	private ListView<String> feList;
 	private Alert alert;
 	
+	private boolean windowOpened;
+	private Stage stage;
+	private BorderPane BP;
+	private TextField userText;
+	private TextArea messageText;
+	
+	
 	//Constructor
 	public User(String id) {
 		this.id = id;
@@ -43,7 +53,7 @@ public class User extends Subject implements Tree, Observer{
 		following = new ArrayList<>();
 		tweets = new ArrayList<>();
 		feed = new ArrayList<>();
-		//initializeStage();
+		startStage();
 	}
 	
 	public int accept(Statistics visitor) {
@@ -70,13 +80,18 @@ public class User extends Subject implements Tree, Observer{
 		}
 	}
 	
-	
-	
+	public void post(String msg) {
+		tweets.add(msg);
+		feed.add(msg);
+		updateAllObservers();
+	}
 
+	
+///////Getters and Setters///////
 	@Override
 	public String getId() {
 		// TODO Auto-generated method stub
-		return null;
+		return id;
 	}
 
 	public List<String> getFollowers() {
@@ -127,15 +142,84 @@ public class User extends Subject implements Tree, Observer{
 		this.feList = feList;
 	}
 	
-	/*private void initializeStage() { // UI initialization
+//////////////////////////////////////////////////////////////
+	private void startStage() { // UI initialization
         windowOpened = false;
-        borderPane = new BorderPane();
+        BP = new BorderPane();
         stage = new Stage();
         stage.setTitle(id);
-        stage.setScene(new Scene(borderPane, 750, 500));
+        stage.setScene(new Scene(BP, 750, 500));
         stage.setOnCloseRequest(event -> {
             windowOpened = false;
         });
-    }*/
+    }
+	
+	public void openWindoUV() { 
+        if (windowOpened) {
+            return;
+        }
+        windowOpened = true;  
 
+        userText = new TextField();
+        messageText = new TextArea();
+        Button followButton = new Button("Follow");
+        Button postButton = new Button("Post");
+        foList= new ListView<>();
+        feList = new ListView<>();
+
+        ObservableList<String> inFeList = FXCollections.observableArrayList(feed); 
+        feList.setItems(inFeList);
+        ObservableList<String> inFoList = FXCollections.observableArrayList(following);
+        foList.setItems(inFoList);
+
+        followButton.setOnAction(event -> {
+            if (id.equals(userText.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR, "You cannot follow that user. Please enter a different user id.");
+                alert.show();
+            }
+            else if(following.contains(userText.getText())) {
+                alert = new Alert(Alert.AlertType.ERROR, "You are already following this user.");
+                alert.show();
+            }
+            else {
+                follow(userText.getText());
+                ObservableList<String> followList = FXCollections.observableArrayList(following); 
+                foList.setItems(followList);
+            }
+            userText.clear();
+        });
+
+        postButton.setOnAction(event -> {
+            if (messageText.getText().equals("")) {
+                alert = new Alert(Alert.AlertType.ERROR, "Please enter text.");
+                alert.show();
+            }
+            post(id + ": " + messageText.getText());
+            ObservableList<String> tweetList = FXCollections.observableArrayList(feed);
+            feList.setItems(tweetList);
+            messageText.clear();
+        });
+
+        VBox rootBox = new VBox(10);
+        rootBox.setPadding(new Insets(10));
+        rootBox.setAlignment(Pos.CENTER);
+        HBox followBox = new HBox(10);
+        Label followLabel = new Label("Follow User: ");
+        followBox.setPadding(new Insets(10));
+        followBox.setAlignment(Pos.CENTER);
+        HBox postBox = new HBox(10);
+        Label followingLabel = new Label("Following");
+        Label feedLabel = new Label("News Feed");       
+        postBox.setPadding(new Insets(10));   
+        postBox.setAlignment(Pos.CENTER);
+
+        rootBox.getChildren().addAll(followBox, followingLabel, foList, feedLabel, feList, postBox);
+        followBox.getChildren().addAll(followLabel, userText, followButton);
+        postBox.getChildren().addAll(messageText, postButton);
+        BP.setCenter(rootBox);
+        stage.show();
+        
+    }
+	
 }
+	

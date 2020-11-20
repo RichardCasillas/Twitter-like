@@ -17,10 +17,12 @@ package application;
  */
 
 import java.awt.TextArea;
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
+import application.User;
 import Visitor.MTotal;
 import Visitor.PPTotal;
 import Visitor.UGTotal;
@@ -29,7 +31,10 @@ import application.Tree;
 import application.UserGroup;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -38,6 +43,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import javafx.scene.Node;
 
 public class Controller {
 
@@ -131,7 +138,7 @@ public class Controller {
 	void addUserGroup(ActionEvent event) {	//add user group button
 
 		if (treeView.getSelectionModel().getSelectedItem() == null) {
-			alert = new Alert(Alert.AlertType.ERROR, "Please select a group.");
+			alert = new Alert(Alert.AlertType.ERROR, "Select a group first.");
 			alert.show();
 		}
 		else if (groupId.getText().equals("")) {
@@ -162,25 +169,30 @@ public class Controller {
 			groupId.clear();
 		}
 	}
-
-	/*@FXML
-    void userView(ActionEvent event) {
-    	if (treeView.getSelectionModel().getSelectedItem() != null) {
-            User user = checkUser(rootGroup, treeView.getSelectionModel().getSelectedItem().getValue());
+	
+	@FXML void userViewButtonPushed(ActionEvent event) {
+		if (treeView.getSelectionModel().getSelectedItem() != null) {
+            User user = grabUser(mainRoot, treeView.getSelectionModel().getSelectedItem().getValue());
             if(user != null) {
-                user.getUserView();
+                user.openWindoUV();
+            }
+            else {
+                alert = new Alert(Alert.AlertType.ERROR, "Please select a user.");
+                alert.show();
             }
         }
         else {
-            selectMsg.show();
+            alert = new Alert(Alert.AlertType.ERROR, "Please select a user.");
+            alert.show();
         }
-    }*/
+	}
+
 
 	@FXML
 	void userTotal(ActionEvent event) {	//add user total button
 		UTotal visitor = new UTotal();
 		int registeredUsers = mainRoot.accept(visitor);
-		Alert registeredUsersalert = new Alert(Alert.AlertType.INFORMATION, "There are currently " + registeredUsers + " registered users.");
+		Alert registeredUsersalert = new Alert(Alert.AlertType.INFORMATION, "There are currently " + registeredUsers + " users.");
 		registeredUsersalert.show();
 	}
 
@@ -213,10 +225,28 @@ public class Controller {
 		alert.show();
 	}
 
-    public User findUser(String id) { // returns corresponding user with id (full search)
+
+	//moved to Admin Panel class
+	/*public User findUser(String id) { // returns corresponding user with id (full search)
         return grabUser(mainRoot, id);
     }
-	
+
+	private User grabUser(Tree entry, String id) { // returns user with corresponding id
+		if (entry instanceof User && entry.getId().equals(id)) {
+			return (User) entry;
+		}
+
+		if (entry instanceof UserGroup) {
+			for (Tree t : ((UserGroup) entry).getList()) {
+				User user = grabUser(t, id);
+				if (user != null) {
+					return user;
+				}
+			}
+		}
+		return null;
+
+	}*/
 	private User grabUser(Tree entry, String id) { // returns user with corresponding id
 		if (entry instanceof User && entry.getId().equals(id)) {
 			return (User) entry;
@@ -233,3 +263,4 @@ public class Controller {
 		return null;
 	}
 }
+

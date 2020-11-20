@@ -41,7 +41,7 @@
                         <Insets left="130.0" />
                      </padding>
                   </Label>
-                  <Button fx:id="openUserView" mnemonicParsing="false" prefHeight="44.0" prefWidth="685.0" text="Open User View" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button fx:id="openUserView" mnemonicParsing="false" onAction="#userViewButtonPushed" prefHeight="44.0" prefWidth="685.0" text="Open User View" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <TextField fx:id="userId" onAction="#addUser" promptText="Enter a User name:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="groupId" onAction="#addUserGroup" promptText="Enter a Group name:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
@@ -57,8 +57,8 @@
               </rowConstraints>
                <children>
                   <Button fx:id="showUserTotal" mnemonicParsing="false" onAction="#userTotal" prefHeight="72.0" prefWidth="190.0" text="Show User Total" />
-                  <Button fx:id="showMessageTotal" mnemonicParsing="false" prefHeight="72.0" prefWidth="190.0" text="Show Messages Total" GridPane.rowIndex="1" />
-                  <Button fx:id="showPositivePercentage" mnemonicParsing="false" prefHeight="72.0" prefWidth="190.0" text="Show Positive Percentage" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="showMessageTotal" mnemonicParsing="false" onAction="#messageTotal" prefHeight="72.0" prefWidth="190.0" text="Show Messages Total" GridPane.rowIndex="1" />
+                  <Button fx:id="showPositivePercentage" mnemonicParsing="false" onAction="#positiveTotal" prefHeight="72.0" prefWidth="190.0" text="Show Positive Percentage" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button fx:id="showGroupTotal" mnemonicParsing="false" onAction="#groupTotal" prefHeight="72.0" prefWidth="190.0" text="Show Group Total" GridPane.columnIndex="1" />
                </children>
             </GridPane>

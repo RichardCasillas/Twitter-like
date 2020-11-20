@@ -31,7 +31,7 @@ public class PPTotal implements Statistics{	//visitor pattern
 			for (String positiveWord : arr) {
 				if (positiveWord.equals("happy") || positiveWord.equals("good") || 
 				    positiveWord.equals("love") || positiveWord.equals("blessed") ||
-				    positiveWord.equals("cute") || positiveWord.equals("blessed")) {
+				    positiveWord.equals("cute") || positiveWord.equals("awsome")) {
 					count++;
 					break;
 				}

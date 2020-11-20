@@ -19,11 +19,11 @@ import application.UserGroup;
 public class AdminPanel {
 	
 	private static AdminPanel instance = null;
-	private UserGroup rootGroup;
+	private UserGroup mainRoot;
 	
 	
 	private AdminPanel() {
-		rootGroup = new UserGroup("Root");
+		mainRoot = new UserGroup("Root");
 	}
 	
 	public static AdminPanel getInstance() {
@@ -33,7 +33,11 @@ public class AdminPanel {
 		return instance;
 	}
 	
-    private boolean checkUnique(Tree entry, String id) { // checks if id is unique
+	public User findUser(String id) { //locates user by doing a search 
+        return grabUser(mainRoot, id);
+    }
+	
+    private boolean checkUnique(Tree entry, String id) { //compares id and checks to make sure it is unique
         for  (Tree t : ((UserGroup) entry).getList()) {
             if (t.getId().equals(id)) {
                 return false;
@@ -46,5 +50,21 @@ public class AdminPanel {
         }
         return true;
     }
+    
+    private User grabUser(Tree entry, String id) { // returns user with corresponding id
+		if (entry instanceof User && entry.getId().equals(id)) {
+			return (User) entry;
+		}
+
+		if (entry instanceof UserGroup) {
+			for (Tree t : ((UserGroup) entry).getList()) {
+				User user = grabUser(t, id);
+				if (user != null) {
+					return user;
+				}
+			}
+		}
+		return null;
+	}
     
 }
