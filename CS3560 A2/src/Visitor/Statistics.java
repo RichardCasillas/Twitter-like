@@ -13,7 +13,7 @@ import application.UserGroup;
 
 public interface Statistics {	//visitor pattern
 
-	public int visit(User user);
-	public int visit(UserGroup group);
+	public void visit(User user);		//changed both methods
+	public void visit(UserGroup group); //to void
 	
 }

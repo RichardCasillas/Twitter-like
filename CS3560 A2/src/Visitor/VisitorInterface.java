@@ -9,5 +9,5 @@ package Visitor;
  */
 
 public interface VisitorInterface {	//visitor pattern
-	public int accept(Statistics visitor);
+	public void accept(Statistics visitor);	//changed to void
 }

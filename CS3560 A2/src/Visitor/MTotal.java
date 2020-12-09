@@ -12,19 +12,23 @@ import application.User;
 import application.UserGroup;
 
 public class MTotal implements Statistics{	//visitor pattern
+	private int counter;
+	
 	
 	public MTotal() {
-		
+		counter = 0;
 	}
 	
 	@Override
-	public int visit(User user) {
-		return user.getTweets().size();
+	public void visit(User user) {
+		counter = counter + user.getTweets().size();
 	}
 	
 	@Override
-	public int visit(UserGroup group) {
-		return 0;
+	public void visit(UserGroup group) {
+		//do nothing
 	}
 
+	public int getCounter() {return counter;}
+	
 }

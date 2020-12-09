@@ -11,6 +11,10 @@ package application;
  * and list
  * also implements the accept and getId methods and
  * is part of composite pattern
+ * 
+ * 7 December 2020
+ * fixed changes from changing method types in interfaces 
+ * and removed counters
  */
 
 import Visitor.Statistics;
@@ -34,13 +38,12 @@ public class UserGroup implements Tree{
 		list.add(new UserGroup(id));
 	}
 	
-	public int accept(Statistics visitor) {	//accept a visitor
-		int count = 0;
+	public void accept(Statistics visitor) {	//accept a visitor
+		//removed counter
 		for (Tree tree : list) {
-			count += tree.accept(visitor);
+			tree.accept(visitor);
 		}
-		count += visitor.visit(this);
-		return count;
+		visitor.visit(this);
 	}
 
 	///////// GETTERS AND SETTERS GENERATED /////////

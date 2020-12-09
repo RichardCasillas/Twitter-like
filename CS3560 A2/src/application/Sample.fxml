@@ -46,7 +46,7 @@
                   <TextField fx:id="groupId" onAction="#addUserGroup" promptText="Enter a Group name:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
-            <GridPane layoutX="82.0" layoutY="516.0" prefHeight="176.0" prefWidth="760.0" AnchorPane.bottomAnchor="111.0" AnchorPane.leftAnchor="82.0" AnchorPane.rightAnchor="125.0">
+            <GridPane layoutX="82.0" layoutY="516.0" prefHeight="255.0" prefWidth="760.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="82.0" AnchorPane.rightAnchor="125.0">
               <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -54,12 +54,15 @@
               <rowConstraints>
                 <RowConstraints maxHeight="82.0" minHeight="10.0" prefHeight="80.0" valignment="CENTER" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="85.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="85.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Button fx:id="showUserTotal" mnemonicParsing="false" onAction="#userTotal" prefHeight="72.0" prefWidth="190.0" text="Show User Total" />
                   <Button fx:id="showMessageTotal" mnemonicParsing="false" onAction="#messageTotal" prefHeight="72.0" prefWidth="190.0" text="Show Messages Total" GridPane.rowIndex="1" />
                   <Button fx:id="showPositivePercentage" mnemonicParsing="false" onAction="#positiveTotal" prefHeight="72.0" prefWidth="190.0" text="Show Positive Percentage" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button fx:id="showGroupTotal" mnemonicParsing="false" onAction="#groupTotal" prefHeight="72.0" prefWidth="190.0" text="Show Group Total" GridPane.columnIndex="1" />
+                  <Button fx:id="latestUpdate" mnemonicParsing="false" onAction="#checkUpdates" prefHeight="72.0" prefWidth="190.0" text="Check last update" GridPane.rowIndex="2" />
+                  <Button fx:id="verify" mnemonicParsing="false" onAction="#verifyCheck" prefHeight="72.0" prefWidth="190.0" text="Verify Users" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
             <ImageView fx:id="CPP" fitHeight="134.0" fitWidth="527.0" layoutX="201.0" layoutY="317.0" pickOnBounds="true">

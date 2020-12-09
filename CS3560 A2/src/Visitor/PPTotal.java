@@ -13,15 +13,20 @@ import application.UserGroup;
 import java.util.List;
 
 public class PPTotal implements Statistics{	//visitor pattern
+	private int counter;
 	
-	@Override
-	public int visit(User user) {
-		return checkPositive(user.getTweets());
+	public PPTotal() {
+		counter = 0;
 	}
 	
 	@Override
-	public int visit(UserGroup group) {
-		return 0;
+	public void visit(User user) {
+		counter = counter + checkPositive(user.getTweets());
+	}
+	
+	@Override
+	public void visit(UserGroup group) {
+		//nothing
 	}
 	
 	public int checkPositive(List<String> list) {
@@ -39,5 +44,7 @@ public class PPTotal implements Statistics{	//visitor pattern
 		}
 		return count;
 	}
+	
+	public int getCounter() {return counter;}
 
 }

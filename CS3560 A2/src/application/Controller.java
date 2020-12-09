@@ -14,6 +14,8 @@ package application;
  * built using scene builder
  * contains methods that add the functionality to the buttons in the GUI
  * 
+ * 7 December 2020
+ * Added 2 new buttons and their methods
  */
 
 import java.awt.TextArea;
@@ -23,10 +25,7 @@ import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 import application.User;
-import Visitor.MTotal;
-import Visitor.PPTotal;
-import Visitor.UGTotal;
-import Visitor.UTotal;
+import Visitor.*;
 import application.Tree;
 import application.UserGroup;
 import javafx.event.ActionEvent;
@@ -90,6 +89,12 @@ public class Controller {
 
 	@FXML // fx:id="showGroupTotal"
 	private Button showGroupTotal; // Value injected by FXMLLoader
+	
+	@FXML
+	private Button latestUpdate;
+	
+	@FXML
+	private Button verify;
 
 
 	public void initialize() {	//method to initialize the root in tree view
@@ -153,7 +158,7 @@ public class Controller {
 				mainRoot.addGroup(groupId.getText());
 			}
 			else {
-				//findForGroup(treeView, mainRoot, groupId);
+				
 				for (Tree t : ((UserGroup) mainRoot).getList()) {
 					if (t instanceof UserGroup) {
 						if (treeView.getSelectionModel().getSelectedItem().getValue().equals(t.getId())) {
@@ -191,23 +196,26 @@ public class Controller {
 	@FXML
 	void userTotal(ActionEvent event) {	//add user total button
 		UTotal visitor = new UTotal();
-		int registeredUsers = mainRoot.accept(visitor);
-		Alert registeredUsersalert = new Alert(Alert.AlertType.INFORMATION, "There are currently " + registeredUsers + " users.");
+		mainRoot.accept(visitor);
+		int count = visitor.getCounter();
+		Alert registeredUsersalert = new Alert(Alert.AlertType.INFORMATION, "There are currently " + count + " users.");
 		registeredUsersalert.show();
 	}
 
 	@FXML
 	void groupTotal(ActionEvent event) {	//add group total button
 		UGTotal visitor = new UGTotal();
-		int userGroup = mainRoot.accept(visitor) - 1;
-		Alert userGroupalert = new Alert(Alert.AlertType.INFORMATION, "There are currently " + userGroup + " user group(s).");
+		mainRoot.accept(visitor);
+		int count = visitor.getCounter() -1;
+		Alert userGroupalert = new Alert(Alert.AlertType.INFORMATION, "There are currently " + count + " user group(s).");
 		userGroupalert.show();
 	}
 
 	@FXML 
 	void messageTotal(ActionEvent event) {	//add messages total button
 		MTotal visitor = new MTotal();
-		int count = mainRoot.accept(visitor);
+		mainRoot.accept(visitor);
+		int count = visitor.getCounter();
 		alert = new Alert(Alert.AlertType.INFORMATION, "Number of Current Messages is : " + count);
 		alert.setHeaderText("Message Total");
 		alert.show();
@@ -217,36 +225,49 @@ public class Controller {
 	void positiveTotal(ActionEvent event) {	//add positive percentage total button
 		PPTotal pVisitor = new PPTotal();
 		MTotal mVisitor = new MTotal();
-		int posCount = mainRoot.accept(pVisitor);
-		int mesCount = mainRoot.accept(mVisitor);
-		double percent = (double) posCount / mesCount;
-		alert = new Alert(Alert.AlertType.INFORMATION, (percent * 100) + "% of messages are positive");
+		mainRoot.accept(pVisitor);
+		mainRoot.accept(mVisitor);
+		int pCounter = pVisitor.getCounter();
+		int mCounter = mVisitor.getCounter();
+		
+		if(mCounter == 0) {
+			alert = new Alert(Alert.AlertType.ERROR, "There are currently no messages.");
+		}
+		else {
+			double percent = (double) pCounter / mCounter;
+			alert = new Alert(Alert.AlertType.INFORMATION, (percent * 100) + "% of messages are positive");
+		}
+		
 		alert.setHeaderText("Positive Messages Total");
 		alert.show();
 	}
+	
+	@FXML
+	void checkUpdates (ActionEvent event) {	//button to check who the last updated user/group is
+		LastUpdated visitor = new LastUpdated();
+		mainRoot.accept(visitor);
+		User user = visitor.getUser();
+		
+		if(user == null) 
+			alert = new Alert(Alert.AlertType.INFORMATION, "There are currently no registered users. Please add users before trying again.");
+		else
+			alert = new Alert(Alert.AlertType.INFORMATION, "The user that was last updated is: " + user.getId());
+		alert.setHeaderText("Updates");
+		alert.show();
+	}
+	
+	@FXML
+	void verifyCheck (ActionEvent event) {	//button to make sure usernames dont have any spaces 
+		UUGVerification visitor = new UUGVerification();
+		mainRoot.accept(visitor);
+		if(visitor.getVerification())
+			alert = new Alert(Alert.AlertType.INFORMATION, "Everyone has valid usernames! ");
+		else
+			alert = new Alert(Alert.AlertType.INFORMATION, "Someone has an invalid username! ");
+		alert.setHeaderText("Verification");
+		alert.show();
+	}
 
-
-	//moved to Admin Panel class
-	/*public User findUser(String id) { // returns corresponding user with id (full search)
-        return grabUser(mainRoot, id);
-    }
-
-	private User grabUser(Tree entry, String id) { // returns user with corresponding id
-		if (entry instanceof User && entry.getId().equals(id)) {
-			return (User) entry;
-		}
-
-		if (entry instanceof UserGroup) {
-			for (Tree t : ((UserGroup) entry).getList()) {
-				User user = grabUser(t, id);
-				if (user != null) {
-					return user;
-				}
-			}
-		}
-		return null;
-
-	}*/
 	private User grabUser(Tree entry, String id) { // returns user with corresponding id
 		if (entry instanceof User && entry.getId().equals(id)) {
 			return (User) entry;

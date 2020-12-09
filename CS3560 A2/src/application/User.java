@@ -10,6 +10,11 @@ package application;
  * Defines a User and implements 
  * the getId and accept methods and 
  * is part of the composite pattern
+ * 
+ * 7 December 2020
+ * added time related objects
+ * updated constructor
+ * updated methods from interfaces 
  */
 
 import Visitor.Observer;
@@ -45,6 +50,10 @@ public class User extends Subject implements Tree, Observer{
 	private TextField userText;
 	private TextArea messageText;
 	
+	private long createTime;
+	private long updateTime;
+	Label updateLabel;
+	
 	
 	//Constructor
 	public User(String id) {
@@ -53,11 +62,14 @@ public class User extends Subject implements Tree, Observer{
 		following = new ArrayList<>();
 		tweets = new ArrayList<>();
 		feed = new ArrayList<>();
+		createTime = System.currentTimeMillis();
+		updateTime = System.currentTimeMillis();
+		updateLabel = new Label("Last updated was at: " + updateTime);
 		startStage();
 	}
 	
-	public int accept(Statistics visitor) {
-		return visitor.visit(this);
+	public void accept(Statistics visitor) {
+		visitor.visit(this);
 	}
 	
 	public void update(Subject sub) {
@@ -83,6 +95,8 @@ public class User extends Subject implements Tree, Observer{
 	public void post(String msg) {
 		tweets.add(msg);
 		feed.add(msg);
+		updateTime = System.currentTimeMillis();
+		updateLabel.setText("Was last updated at: " + updateTime);
 		updateAllObservers();
 	}
 
@@ -141,6 +155,10 @@ public class User extends Subject implements Tree, Observer{
 	public void setFeList(ListView<String> feList) {
 		this.feList = feList;
 	}
+	
+	public long getUpdatedTime() {return updateTime;}
+	
+	
 	
 //////////////////////////////////////////////////////////////
 	private void startStage() { // UI initialization
@@ -212,10 +230,16 @@ public class User extends Subject implements Tree, Observer{
         Label feedLabel = new Label("News Feed");       
         postBox.setPadding(new Insets(10));   
         postBox.setAlignment(Pos.CENTER);
+        
+        HBox timeBox = new HBox(10);
+        Label timeLabel = new Label("Created at: " + createTime);
+        timeBox.setPadding(new Insets(10));
+        
 
         rootBox.getChildren().addAll(followBox, followingLabel, foList, feedLabel, feList, postBox);
         followBox.getChildren().addAll(followLabel, userText, followButton);
         postBox.getChildren().addAll(messageText, postButton);
+        timeBox.getChildren().addAll(timeLabel,updateLabel);
         BP.setCenter(rootBox);
         stage.show();
         

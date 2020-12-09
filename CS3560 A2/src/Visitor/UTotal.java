@@ -12,18 +12,20 @@ import application.User;
 import application.UserGroup;
 
 public class UTotal implements Statistics{	//visitor pattern
+	private int counter;
 	
-	public UTotal() {}
+	public UTotal() {counter = 0;}
 	
 	@Override
-	public int visit(User user) {
-		return 1;
+	public void visit(User user) {
+		counter++;
 	}
 	
 	@Override
-	public int visit(UserGroup group) {
-		return 0;
+	public void visit(UserGroup group) {
+		//do nothing
 	}
-	
+
+	public int getCounter() {return counter;}
 
 }

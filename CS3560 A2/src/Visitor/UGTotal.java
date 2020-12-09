@@ -12,19 +12,22 @@ import application.User;
 import application.UserGroup;
 
 public class UGTotal implements Statistics{	//visitor pattern
+	private int counter;
 	
 	public UGTotal() {
-		
+		counter = 0;
 	}
 	
 	@Override 
-	public int visit(User user) {
-		return 0;
+	public void visit(User user) {
+		//do nothing
 	}
 	
 	@Override
-	public int visit(UserGroup group) {
-		return 1;
+	public void visit(UserGroup group) {
+		counter++;
 	}
+	
+	public int getCounter() {return counter;}
 
 }
